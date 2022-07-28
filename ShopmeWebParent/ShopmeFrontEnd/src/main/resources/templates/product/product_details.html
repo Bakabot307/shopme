@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="/admin/admin-layout"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+    <head>
+        <meta charset="UTF-8">
+        <title>Dashboard</title>
+    </head>
+    <body>
+
+        <div layout:fragment="content" >	
+            <div th:if="${listCategoryParents != null && !listCategoryParents.empty}">
+		<div class="row">
+			<div class="col">
+				<nav>
+					<ol class="breadcrumb">
+						<li class="breadcrumb-item">
+							<a th:href="@{/shop}">Home</a>
+						</li>
+						
+						<th:block th:each="parent : ${listCategoryParents}">
+						<li class="breadcrumb-item">
+							<a th:href="@{'/shop/category/' + ${parent.alias}}">[[${parent.name}]]</a>
+						</li>
+						</th:block>
+						
+						<li class="breadcrumb-item" th:if="${product != null}">
+							<span>[[${product.shortName}]]</span>
+						</li>
+						
+					</ol>
+				</nav>
+			</div>
+		</div>
+	</div>
+            <div class="row">
+                <div class="col-sm">
+                    <div>
+                        <img id="bigImage" th:src="@{${product.mainImagePath}}" class="img-fluid" index="0" />
+                    </div>
+                    <div class="d-flex justify-content-start">
+                        <div class="m-2 border border-secondary p-1">
+                            <img class="image-thumbnail" th:src="@{${product.mainImagePath}}" height="50" index="0" />
+                        </div>
+                        <th:block th:each="extraImage, status : ${product.images}">
+                            <div class="m-2 border border-secondary p-1 ">
+                                <img class="image-thumbnail" th:src="@{${extraImage.imagePath}}" height="50" 
+                                     th:index="${status.count}" />
+                            </div>				
+                        </th:block>
+                    </div>
+                </div>
+                <div class="col-sm">
+                    <div>
+                        <h2>[[${product.name}]]</h2>
+                    </div>
+                    <div>
+                        <span>Brand: [[${product.brand.name}]]</span>
+                    </div>
+                    <div>
+                        List Price:
+                        <span th:if="${product.discountPercent <= 0}">$ [[${product.price}]]</span>
+                        <del th:if="${product.discountPercent > 0}"><span>$ [[${product.price}]]</span></del>
+                    </div>
+                    <div th:if="${product.discountPercent > 0}">
+                        Price:
+                        <span style="font-size: larger; color: darkred">$ [[${product.discountPrice}]]</span>
+                        ([[${product.discountPercent}]] % off)
+                    </div>
+                    <div>&nbsp;</div>
+                    <div th:utext="${product.shortDescription}"></div>			
+                </div>
+                <div class="col-sm-2">
+                    <div>
+                        <span th:if="${product.inStock}" class="text-success"><b>In Stock</b></span>
+                        <span th:unless="${product.inStock}" class="text-danger"><b>Out of Stock</b></span>
+                    </div>
+                    <nav>
+                        <th:block th:if="${product.inStock}">
+                            <ul class="pagination">
+                                <li class="page-item">
+                                    <a class="page-link linkMinus" th:pid="${product.id}" href=""><b>-</b></a>
+                                </li>
+                                <li class="page-item">
+                                    <input type="text" value="1" th:id="'quantity' + ${product.id}" 
+                                           onkeydown="return false;" 
+                                           class="form-control text-center" style="width: 55px" />
+                                </li>			
+                                <li class="page-item">
+                                    <a class="page-link linkPlus" th:pid="${product.id}" href=""><b>+</b></a>
+                                </li>
+
+                            </ul>
+                        </th:block>
+
+                    </nav>
+                    <div class="mt-3">
+                        <input type="button" value="Add to Cart" id="buttonAdd2Cart" class="btn btn-primary" />
+
+                    </div>
+                    <span class="error" id="error-quantity"></span>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12">
+                    <div><hr/></div>
+                    <div>
+                        <h3>Product Description:</h3>
+                    </div>
+                    <div th:utext="${product.fullDescription}"></div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12">
+                    <div><hr/></div>
+                    <div>
+                        <h3>Product Details:</h3>
+                    </div>
+                    <th:block th:each="detail : ${product.details}">
+                        <div>
+                            <b>[[${detail.name}]]</b>:
+                            <span>[[${detail.value}]]</span>
+                        </div>
+                    </th:block>
+                </div>
+            </div>
+            <script type="text/javascript">
+                contextPath = "[[@{/}]]";
+                productId = "[[${product.id}]]";
+                var csrfHeaderName = "[[${_csrf.headerName}]]";
+                var csrfValue = "[[${_csrf.token}]]";
+            </script>
+            <script language="JavaScript" type="text/javascript" th:src="@{/adminss/dist/js/quantity_control.js}"></script>
+            <script language="JavaScript" type="text/javascript" th:src="@{/adminss/dist/js/add_to_cart.js}"></script>
+        </div>
+
+    </body>
+</html>

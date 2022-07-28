@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="/admin/admin-layout"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+    <head>
+        <meta charset="UTF-8">
+        <title>Dashboard</title>
+    </head>
+    <body>
+
+        <div layout:fragment="content">	
+            <section class="content-header">     
+                <div
+                    class="d-sm-flex align-items-center justify-content-between mb-2 mt-2"
+                    >
+                    <h1>
+                        Category
+                        <small>Control panel</small> 		
+                    </h1>
+                    <a
+                        href="#"
+                        class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"
+                        ><i class="fas fa-download fa-sm text-white-50"></i> Generate
+                        Report</a
+                    >
+                    <a type="button" class="btn btn-primary" th:href="@{/admin/category/new}">Create category</a>
+                    <!--                    <a type="button" class="btn btn-primary" th:href="#">Create user</a>-->
+                </div>
+            </section>        
+            <section class="content">
+                <!-- Small boxes (Stat box) -->
+
+                <div class="card shadow mb-4">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-primary">Category database</h6>
+                        <div th:if="${message!=null}" class="alert alert-success text-center">[[${message}]]</div>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered" 
+                                   id="dataTable" 
+                                   width="100%" 
+                                   cellspacing="0"
+
+                                   >
+                                <thead >
+                                    <tr>
+
+                                        <th>ID</th>
+                                        <th>Image</th>
+                                        <th>
+                                            <a class="text-black " th:href="@{'/admin/category?sort=' + ${reverseSortDir}}">
+                                                Category Name
+                                                <i th:class="${reverseSortDir == 'desc' ? 'fas fa-sort-up ml-2' : 'fas fa-sort-down ml-2'}" ></i>	                                                
+                                            </a>
+
+                                        </th>
+                                        <th>Alias</th>
+                                        <th>Enabled</th>
+                                        <th>Action</th>
+
+                                    </tr>
+                                </thead>                                                  
+                                <tbody>                                                                            
+                                    <tr th:each="cat : ${categories}" >
+                                        <td th:text="${cat.id}">Sales Assistant</td>
+                                        <td>
+                                            <img th:if="@{cat.getImage()!=null}" th:src="@{${cat.getImagePath}}" 
+
+                                                 style="width: 50px"/></td>
+
+
+                                        <td th:text="${cat.name}">New York</td>
+                                        <td th:text="${cat.alias}">46</td>
+                                        <td>
+                                            <div  th:remove="tag">
+                                                <a th:if="${cat.enabled == true}" 
+                                                   th:href="@{'/admin/category/' + ${cat.id} + '/enabled/false'}"
+                                                   title="Disable this category"
+                                                   ><i class="fas fa-check-circle fa-2x icon-green" style="color:greenyellow" ></i></a>
+
+                                                <a th:if="${cat.enabled == false}" 
+                                                   th:href="@{'/admin/category/' + ${cat.id} + '/enabled/true'}"
+                                                   title="Enable this category"
+                                                   ><i class="fas fa-check-circle fa-2x icon-dark" style="color:black" ></i></a>	
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <a class="btn btn-link" th:href="@{'/admin/category/'+ ${cat.getId()}}"><i class="fa-solid fa-info"></i></a>
+                                            <a class="btn btn-link" th:href="@{'/admin/category/edit/'+ ${cat.getId()}}"><i class="fa-solid fa-pen-to-square"></i></a>
+                                            <a class="btn btn-link" th:style="${cat.hasChildren == true ? 'display:none;' : ''}" 
+                                               th:href="@{'/admin/category/delete/'+ ${cat.getId()}}"><i class="fa-solid fa-trash-can"></i></a>
+
+
+                                        </td>
+                                    </tr>
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+    </body>
+</html>

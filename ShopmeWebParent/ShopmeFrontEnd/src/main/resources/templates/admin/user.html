@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="/admin/admin-layout"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+    <head>
+        <meta charset="UTF-8">
+        <title>Dashboard</title>
+    </head>
+    <body>
+
+        <div layout:fragment="content">	
+            <section class="content-header">     
+                <div
+                    class="d-sm-flex align-items-center justify-content-between mb-2 mt-2"
+                    >
+                    <h1>
+                        User
+                        <small>Control panel</small> 		
+                    </h1>
+                    <a
+                        href="#"
+                        class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"
+                        ><i class="fas fa-download fa-sm text-white-50"></i> Generate
+                        Report</a
+                    >
+                    <a type="button" class="btn btn-primary" th:href="@{/admin/users/save}">Create user</a>
+                </div>
+            </section>        
+            <section class="content">
+                <!-- Small boxes (Stat box) -->
+
+                <div class="card shadow mb-4">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-primary">Users database</h6>
+                        <div th:if="${message!=null}" class="alert alert-success text-center">[[${message}]]</div>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered" 
+                                   id="dataTable" 
+                                   width="100%" 
+                                   cellspacing="0">
+                                <thead >
+                                    <tr>
+
+                                        <th>Avatar</th>
+                                        <th>Username</th>
+                                        <th>Full Name</th>
+                                        <th>Email</th>
+                                        <th>Password</th>
+                                        <th>Active</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>                                                  
+                                <tbody>                                                                            
+                                    <tr th:each="user : ${users}">
+                                        <td >
+                                            <span th:if="@{user.getAvatar()==null}" >                                               
+                                            </span>
+                                            <img th:if="@{user.getAvatar()!=null}" th:src="@{${user.getPhotosImagePath}}" 
+                                                 style="width: 50px"/>
+                                        </td>
+                                        <td th:text="${user.getUsername()}">Sales Assistant</td>
+                                        <td th:text="${user.getFullname()}">New York</td>
+                                        <td th:text="${user.getEmail()}">46</td>
+                                        <td th:text="${user.getRoles()}">46</td>
+                                        <td style="text-align: center; vertical-align: middle;">
+                                            <a th:if="${user.isActive() == true}" th:href="@{'/admin/users/'+ ${user.getId()} +'/active/false'}"  type="button" >
+                                                <i class="fas fa-check-circle fa-2x icon-green" style="color:greenyellow" ></i>
+                                            </a>
+                                            <a th:if="${user.isActive() == false}" th:href="@{'/admin/users/'+ ${user.getId()} +'/active/true'}"  type="button"   >
+                                                <i class="fas fa-check-circle fa-2x icon-dark" style="color:black" ></i>
+                                            </a>
+                                        </td>
+                                        <td>
+                                            <a class="btn btn-link" th:href="@{'/admin/users/'+ ${user.getId()}}"><i class="fa-solid fa-info"></i></a>
+                                            <a class="btn btn-link" th:href="@{'/admin/users/edit/'+ ${user.getId()}}"><i class="fa-solid fa-pen-to-square"></i></a>
+                                            <a class="btn btn-link" th:href="@{'/admin/users/delete/'+ ${user.getId()}}"><i class="fa-solid fa-trash-can"></i></a>
+                                        </td>
+                                    </tr>
+
+                                </tbody>
+                            </table>
+                            <div class="text-center m-1" th:if="${totalItems > 0}">
+                                <span>Showing users # [[${startCount}]] to [[${endCount}]] of [[${totalItems}]]</span>
+                                <nav aria-label="navigation">
+                                    <ul class="pagination justify-content-center">
+                                        <li th:class="${currentPage > 1 ? 'page-item' : 'page-item disabled'}"><a class="page-link" th:href="@{/admin/users/page/1}">First</a></li>
+                                        <li th:class="${currentPage > 1 ? 'page-item' : 'page-item disabled'}"><a class="page-link" th:href="@{'/admin/users/page/' + ${currentPage - 1}}">Previous</a></li>
+                                        <li th:each='number :  ${#numbers.sequence(1, totalPages)}'
+                                            th:class="${currentPage != number ? 'page-item': 'page-item active'}">
+                                            <a class="page-link" th:href="@{'/admin/users/page/' + ${number}}">[[${number}]]</a>
+                                        </li>
+                                        <li th:class="${currentPage < totalPages ? 'page-item' : 'page-item disabled'}"><a class="page-link" th:href="@{'/admin/users/page/' + ${currentPage + 1}}">Next</a></li>
+                                        <li th:class="${currentPage < totalPages ? 'page-item' : 'page-item disabled'}"><a class="page-link" th:href="@{'/admin/users/page/' + ${totalPages}}">Last</a></li>
+                                    </ul>
+                                </nav>
+                            </div>
+
+
+
+
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+    </body>
+</html>

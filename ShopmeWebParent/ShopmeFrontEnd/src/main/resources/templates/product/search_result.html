@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="/admin/admin-layout"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+    <head>
+        <meta charset="UTF-8">
+        <title>Dashboard</title>
+        <style>
+            .cate-container{
+                display: flex;
+                flex-direction: row;
+                justify-content: center;
+                flex-wrap:wrap;
+                column-gap: 20px;
+            }
+            .cate{
+                width: 150px;
+                height: 74px;
+
+            }
+            .cate-link{
+                text-align: center;
+                display: flex;
+                flex-direction: column;
+                justify-content: space-around;
+                
+            }
+            .cate-image{
+                margin:auto;
+             
+            }
+            .content{
+                width: 1000px;
+                margin: auto;
+            }
+
+            hr {
+                border: 0;
+                clear:both;
+                display:block;
+                width: 96%;
+                background-color:black;
+                height: 1px;
+            }
+
+
+            #line {
+                float: left;
+                width: 100%;
+                height: 40px;
+            }
+            .product-container{
+                width: 1000px;
+                height: auto;
+                display: flex;
+                flex-direction: row;
+                justify-content: flex-start;
+                gap: 10px 10px;
+                flex-wrap: wrap;
+            }
+            .product-card{
+
+            }
+            .product-title{
+                margin-bottom: 20px;
+            }
+           
+            .product-image{
+                   min-height: 200px;
+                   max-height: 200px;
+            }
+            * {box-sizing:border-box}
+
+        </style>
+    </head>
+    <body>
+
+        <div layout:fragment="content">	
+        <div class="row">
+                <div class="col">
+                    <nav>
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item">
+                                <a th:href="@{/shop}">Home</a>
+                            </li>					
+                            <li class="breadcrumb-item">
+                                <a>Search</a>
+                            </li>
+                             <li class="breadcrumb-item">
+                                <a>[[${keyword}]]</a>
+                            </li>
+
+                        </ol>
+                    </nav>
+                </div>
+	<div th:if="${totalItems > 0}">
+		<h2>Search Results for '[[${keyword}]]'</h2>
+	</div>
+	<div th:unless="${totalItems > 0}">
+		<h3>No match found for '[[${keyword}]]'</h3>
+	</div>
+		
+ <div class="product-container" >
+                           
+                        <div class="product-card"th:each="product : ${listResult}">
+                            <div class="card" style="width:240px">
+                                <a th:href="@{'/shop/product/'+ ${product.getAlias()}}">
+                                    <img class="card-img-top product-image" th:src="@{${product.getMainImagePath()}}" alt="Card image">
+                                </a>
+                                <div class="card-body">
+                                    <a th:href="@{'/shop/product/'+ ${product.getAlias()}}">[[${product.name}]]</a>
+                                    <div th:if="${product.discountPercent <= 0}">
+                                        <span style="font-size: larger; color: red;">$ [[${product.price}]]</span>
+                                    </div>
+                                    <div th:if="${product.discountPercent > 0}">
+                                        <span style="font-size: larger; color: red;">$ [[${product.discountPrice}]]</span>
+                                        <del><span>$ [[${product.price}]]</span></del>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+        </div>
+
+    </body>
+</html>

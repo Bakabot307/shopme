@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="/admin/admin-layout"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+    <head>
+        <meta charset="UTF-8">
+        <title>Dashboard</title>
+    </head>
+    <body>
+
+        <div layout:fragment="content">	
+            <section class="content-header">     
+                <div
+                    class="d-sm-flex align-items-center justify-content-between mb-2 mt-2"
+                    >
+                    <h1>
+                        Category
+                        <small>Control panel</small> 		
+                    </h1>
+               
+                    <a type="button" class="btn btn-primary" th:href="@{/admin/product/new}">Create category</a>
+                    <!--                 
+                    -->                </div>
+            </section>        
+            <section class="content"><!--
+                <!-- Small boxes (Stat box) -->
+
+                <div class="card shadow mb-4">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-primary">Category database</h6>
+                        <div th:if="${message!=null}" class="alert alert-success text-center">[[${message}]]</div>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered" 
+                                   id="dataTable" 
+                                   width="100%" 
+                                   cellspacing="0"
+
+                                   >
+                                <thead >
+                                    <tr>
+
+                                        <th>ID</th>
+                                        <th>Image</th>
+                                        <th>Category Name</th>
+                                        <th>Alias</th>
+                                        <th>Enabled</th>
+                                        <th>Action</th>
+
+                                    </tr>
+                                </thead>                                                  
+                                <tbody>                                                                            
+                                    <tr th:each="product : ${listProducts}">
+                                        <td>[[${product.id}]]</td>
+                                        <td >                                   
+                                            <img  th:src="@{${product.getMainImagePath}}" 
+                                                  style="width: 50px"/>
+                                        </td>
+                                        <td>
+                                            <a class="link-detail"
+                                               th:href="@{'/admin/product/detail/' + ${product.id}}"
+                                               title="View details of this product"
+                                               >[[${product.name}]]</a>					
+
+                                        </td>
+                                        <td>[[${product.brand.name}]]</td>
+                                        <td>[[${product.category.name}]]</td>
+                                        <td style="text-align: center; vertical-align: middle;">
+                                            <a th:if="${product.isEnabled() == true}" th:href="@{'/admin/product/'+ ${product.getId()} +'/active/false'}"  type="button" >
+                                                <i class="fas fa-check-circle fa-2x icon-green" style="color:greenyellow" ></i>
+                                            </a>
+                                            <a th:if="${product.isEnabled() == false}" th:href="@{'/admin/product/'+ ${product.getId()} +'/active/true'}"  type="button"   >
+                                                <i class="fas fa-check-circle fa-2x icon-dark" style="color:black" ></i>
+                                            </a>
+                                        </td>                                  	
+                                        <td>
+                                            <a class="btn btn-link" th:href="@{'/shop/product/'+ ${product.getAlias()}}"><i class="fa-solid fa-info"></i></a>
+                                            <a class="btn btn-link" th:href="@{'/admin/product/edit/'+ ${product.getId()}}"><i class="fa-solid fa-pen-to-square"></i></a>
+                                            <a class="btn btn-link" th:href="@{'/admin/product/delete/'+ ${product.getId()}}"><i class="fa-solid fa-trash-can"></i></a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <div class="modal hide fade" id="detailModal" >
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                    </div>
+                </div>
+            </div>
+         <script type="text/javascript">
+	moduleURL = "[[@{/products}]]";
+
+	$(document).ready(function() {
+		$(".link-delete").on("click", function(e) {
+			e.preventDefault();
+			showDeleteConfirmModal($(this), 'product');
+		});
+		
+		$(".link-detail").on("click", function(e) {
+			e.preventDefault();
+			linkDetailURL = $(this).attr("href");
+			$("#detailModal").modal("show").find(".modal-content").load(linkDetailURL);
+		});
+		
+	});
+</script>
+        </div>
+
+    </body>
+</html>

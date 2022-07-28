@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="/admin/admin-layout"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+    <head>
+        <meta charset="UTF-8">
+        <title>Dashboard</title>
+    </head>
+    <body>
+
+        <div layout:fragment="content">	
+                    <div class="row">
+                <div class="col">
+                    <nav>
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item">
+                                <a th:href="@{/shop}">Home</a>
+                            </li>					
+                            <li class="breadcrumb-item">
+                                <a>Address Book</a>
+                            </li>
+
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+            <section class="content-header">     
+                <div
+                    class="d-sm-flex align-items-center justify-content-between mb-2 mt-2"
+                    >
+                    <h1>
+                        Your
+                        <small>Address book</small> 		
+                    </h1>
+              
+                    <a type="button" class="btn btn-primary" th:href="@{/shop/address/new}">Create user</a>
+                </div>
+            </section>        
+            <section class="content">
+       
+	
+	<div th:if="${message != null}" class="alert alert-success text-center m-1">
+		[[${message}]]
+	</div>	
+		
+	<div class="row m-1">
+		<div class="col-sm-6 mt-2">
+			<div class="card" th:classappend="${usePrimaryAddressAsDefault ? 'bg-warning' : ''}">
+				<div class="card-header">
+					<div class="row">
+						<div class="col">
+							<b>Your Primary Address</b>
+						</div>
+						<div class="col">
+							<div class="float-right">
+								<a class="fas fa-edit icon-dark" title="Edit your primary address"
+									></a>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="card-body">
+					[[${customer.address}]]
+				</div>
+			</div>
+		</div>
+		
+		<th:block th:each="address, status: ${listAddresses}">
+		<div class="col-sm-6 mt-2">
+			<div class="card" th:classappend="${address.defaultForShipping ? 'bg-warning' : ''}">
+				<div class="card-header">
+					<div class="row">
+						<div class="col">
+							<b>Address #[[${status.count + 1}]]</b>
+						</div>
+						<div class="col">
+							<div class="float-right">
+								<a  title="Edit this address"
+                                                                   th:href="@{'/shop/address/edit/' + ${address.id}}"> <i class="fas fa-edit icon-dark"></i></a>
+								&nbsp;
+								<a  title="Delete this address"
+									th:entityId="${address.id}"
+                                                                        th:href="@{'/shop/address/delete/' + ${address.id}}"><i class="fas fa-trash icon-dark linkDelete"></i></a>									
+							</div>
+						</div>						
+					</div>
+				</div>
+				<div class="card-body">
+					[[${address}]]
+				</div>
+			</div>
+		</div>		
+		</th:block>		
+	</div>
+
+              
+            </section>
+        </div>
+
+    </body>
+</html>

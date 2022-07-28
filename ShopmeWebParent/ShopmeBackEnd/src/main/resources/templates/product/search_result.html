@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="/admin/admin-layout"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+    <head>
+        <meta charset="UTF-8">
+        <title>Dashboard</title>
+    </head>
+    <body>
+
+        <div layout:fragment="content">	
+       
+	<div th:if="${totalItems > 0}">
+		<h2>Search Results for '[[${keyword}]]'</h2>
+	</div>
+	<div th:unless="${totalItems > 0}">
+		<h3>No match found for '[[${keyword}]]'</h3>
+	</div>
+		
+	<div class="row">
+		<th:block th:each="product : ${listResult}">
+		<div>
+		<a th:href="@{'/shop/product/' + ${product.alias}}">
+			<img th:src="@{${product.mainImagePath}}" width="150" />
+			<br/>
+			<b>[[${product.shortName}]]</b>
+		</a>
+	</div>
+	<div th:if="${product.discountPercent <= 0}">
+		<span>$ [[${product.price}]]</span>
+	</div>
+	<div th:if="${product.discountPercent > 0}">
+		<span style="font-size: larger; color: darkred">$ [[${product.discountPrice}]]</span>
+		<del><span>$ [[${product.price}]]</span></del>
+	</div>				
+		</th:block>
+	</div>
+        </div>
+
+    </body>
+</html>

@@ -1,0 +1,46 @@
+   <section class="content"> 
+                <div>                       
+                    <div  class="cate-container">
+                        <div th:each="cat : ${category.children}">
+
+                            <div class="cate" th:if="${cat.enabled == true}">
+                                <a class="cate-link"                                                   
+                                   th:href="@{'/shop/category/' + ${cat.alias}}"
+                                   type="button"
+                                   >
+                                    <img class="cate-image" 
+                                         th:if="@{cat.getImage()!=null}" th:src="@{${cat.getImagePath}}" width="50px" height="50" />
+                                    <div class="cate-name">[[${cat.name}]]</div>
+
+                                </a>
+
+
+                            </div>
+
+
+                        </div>
+                        <div id="line"><hr  style="" /></div>
+
+
+                    </div>
+                    <div class="product-container">
+                        <div class="product-card"th:each="product : ${listProducts}">
+                            <div class="card" style="width:200px">
+                                <a th:href="@{'/shop/product/'+ ${product.getAlias()}}">
+                                    <img class="card-img-top" th:src="@{${product.getMainImagePath()}}" alt="Card image">
+                                </a>
+                                <div class="card-body">
+                                    <a th:href="@{'/shop/product/'+ ${product.getAlias()}}">[[${product.name}]]</a>
+                                    <div th:if="${product.discountPercent <= 0}">
+                                        <span style="font-size: larger; color: red;">$ [[${product.price}]]</span>
+                                    </div>
+                                    <div th:if="${product.discountPercent > 0}">
+                                        <span style="font-size: larger; color: red;">$ [[${product.discountPrice}]]</span>
+                                        <del><span>$ [[${product.price}]]</span></del>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+            </section>

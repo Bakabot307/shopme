@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="/admin/admin-layout"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+    <head>
+        <meta charset="UTF-8">
+        <title>Dashboard</title>
+    </head>
+    <body>
+
+        <div layout:fragment="content">	
+            <section class="content-header">     
+                <div
+                    class="d-sm-flex align-items-center justify-content-between mb-2 mt-2"
+                    >
+                    <h1>
+                        Category
+                        <small>Control panel</small> 		
+                    </h1>
+                   
+                    <a type="button" class="btn btn-primary" th:href="@{/admin/brand/new}">Create category</a>
+                    <!--                    <a type="button" class="btn btn-primary" th:href="#">Create user</a>-->
+                </div>
+            </section>        
+            <section class="content">
+                <!-- Small boxes (Stat box) -->
+
+                <div class="card shadow mb-4">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-primary">Category database</h6>
+                        <div th:if="${message!=null}" class="alert alert-success text-center">[[${message}]]</div>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered" 
+                                   id="dataTable" 
+                                   width="100%" 
+                                   cellspacing="0"
+
+                                   >
+                                <thead >
+                                    <tr>
+
+                                        <th>ID</th>
+                                        <th>Image</th>
+                                        <th>Category Name</th>
+                                        <th>Alias</th>
+                                        <th>Action</th>
+
+                                    </tr>
+                                </thead>                                                  
+                                <tbody>                                                                            
+                                    <tr th:each="brand : ${brands}" >
+                                        <td th:text="${brand.id}">Sales Assistant</td>
+                                        <td>
+						<img th:src="@{${brand.logoPath}}" style="width: 70px" class="img-fluid"/>
+					</td>
+
+                                        <td th:text="${brand.name}">New York</td>
+                                        <td>
+                                <th:block th:each="brand : ${brand.categories}">
+                                    <span class="badge badge-secondary m-1" th:text="${brand.name}"></span>
+                                </th:block>
+                                </td>
+                                <td>
+                                            <a class="btn btn-link" th:href="@{'/admin/brand/'+ ${brand.getId()}}"><i class="fa-solid fa-info"></i></a>
+                                            <a class="btn btn-link" th:href="@{'/admin/brand/edit/'+ ${brand.getId()}}"><i class="fa-solid fa-pen-to-square"></i></a>
+                                            <a class="btn btn-link" th:href="@{'/admin/brand/delete/'+ ${brand.getId()}}"><i class="fa-solid fa-trash-can"></i></a>
+                                        </td>
+                                </tr>
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+    </body>
+</html>
